@@ -16,8 +16,7 @@ public class DefaultDriveCommand extends CommandBase {
     DoubleSupplier rightStickY;
     BooleanSupplier halfSpeedButton;
 
-    public DefaultDriveCommand (DriveSubsystem driveSubsystem, DoubleSupplier leftStickX, DoubleSupplier leftStickY, DoubleSupplier rightStickX, BooleanSupplier halfSpeedButton)
-    {
+    public DefaultDriveCommand(DriveSubsystem driveSubsystem, DoubleSupplier leftStickX, DoubleSupplier leftStickY, DoubleSupplier rightStickX, BooleanSupplier halfSpeedButton) {
         this.driveSubsystem = driveSubsystem;
 
         this.leftStickX = leftStickX;
@@ -32,7 +31,8 @@ public class DefaultDriveCommand extends CommandBase {
 
     @Override
     public void execute() {
-        driveSubsystem.driveTeleop(leftStickY.getAsDouble(), leftStickX.getAsDouble(), rightStickY.getAsDouble());
+        driveSubsystem.driveTeleop(leftStickY.getAsDouble(), leftStickX.getAsDouble(), rightStickY.getAsDouble(),
+                halfSpeedButton.getAsBoolean());
     }
 
 }

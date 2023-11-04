@@ -74,12 +74,12 @@ public class DriveSubsystem extends SubsystemBase {
      * inputs based on stick directions. Better versions would include field-centric driving,
      * deadbands, and more.
      */
-    public void driveTeleop(double leftSickY, double leftStickX, double rightStickX) {
+    public void driveTeleop(double leftSickY, double leftStickX, double rightStickX, boolean halfSpeed) {
         double y = leftSickY; // Remember, Y stick value is reversed
         double x = -leftStickX;
         double rx = rightStickX;
 
-        double botHeading = -getHeading(); // TODO: this might need to be a minus. I've added it, but we need to test it!!!
+        double botHeading = -getHeading();
 
         // Rotate the movement direction counter to the bot's rotation
         double rotX = x * Math.cos(-botHeading) - y * Math.sin(-botHeading);
@@ -95,6 +95,13 @@ public class DriveSubsystem extends SubsystemBase {
         double backLeftPower = (rotY - rotX + rx) / denominator;
         double frontRightPower = (rotY - rotX - rx) / denominator;
         double backRightPower = (rotY + rotX - rx) / denominator;
+
+        if (halfSpeed) {
+            frontLeftPower /= 2.0;
+            backLeftPower /= 2.0;
+            frontRightPower /= 2.0;
+            backRightPower /= 2.0;
+        }
 
         leftFrontDrive.setPower(frontLeftPower);
         leftRearDrive.setPower(backLeftPower);

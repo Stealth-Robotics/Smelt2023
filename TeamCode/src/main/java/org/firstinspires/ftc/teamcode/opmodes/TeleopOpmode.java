@@ -9,6 +9,8 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.teamcode.commands.DefaultArmCommand;
 import org.firstinspires.ftc.teamcode.commands.DefaultDriveCommand;
 import org.firstinspires.ftc.teamcode.commands.DefaultExtenderCommand;
+import org.firstinspires.ftc.teamcode.commands.MoveWristDownCommand;
+import org.firstinspires.ftc.teamcode.commands.MoveWristUpCommand;
 import org.firstinspires.ftc.teamcode.subsytems.ArmSubSystem;
 import org.firstinspires.ftc.teamcode.subsytems.DriveSubsystem;
 import org.firstinspires.ftc.teamcode.subsytems.ExtenderSubsystem;
@@ -33,7 +35,7 @@ public class TeleopOpmode extends CommandOpMode {
         mechanismGamepad = new GamepadEx(gamepad2);
 
         driveSubsystem = new DriveSubsystem(hardwareMap, telemetry);
-        armSubSystem = new ArmSubSystem(hardwareMap);
+        armSubSystem = new ArmSubSystem(hardwareMap, telemetry);
         extenderSubsystem = new ExtenderSubsystem(hardwareMap, telemetry);
         scoreSubsystem = new ScoreSubsystem(hardwareMap);
 
@@ -45,16 +47,16 @@ public class TeleopOpmode extends CommandOpMode {
                         () -> driveGamepad.getLeftX(),
                         () -> driveGamepad.getLeftY(),
                         () -> driveGamepad.getRightX(),
-                        () -> driveGamepad.getGamepadButton(GamepadKeys.Button.A).get()));
+                        () -> driveGamepad.getGamepadButton(GamepadKeys.Button.RIGHT_BUMPER).get()));
+
+        armSubSystem.setDefaultCommand(new DefaultArmCommand(armSubSystem, () -> mechanismGamepad.getLeftY(), () -> scoreSubsystem.isWristUp()));
+
+        // Not ready yet!!!
+//        extenderSubsystem.setDefaultCommand(new DefaultExtenderCommand(extenderSubsystem, () -> mechanismGamepad.getRightY()));
 
         driveGamepad.getGamepadButton(GamepadKeys.Button.DPAD_DOWN).whenPressed(new InstantCommand(() -> driveSubsystem.resetAngle()));
-
-        armSubSystem.setDefaultCommand(new DefaultArmCommand(armSubSystem, () -> mechanismGamepad.getLeftY()));
-
-        extenderSubsystem.setDefaultCommand(new DefaultExtenderCommand(extenderSubsystem, () -> mechanismGamepad.getRightY()));
-
-        driveGamepad.getGamepadButton(GamepadKeys.Button.A).whenPressed(new InstantCommand(() -> scoreSubsystem.setWristPosition(0)));
-        driveGamepad.getGamepadButton(GamepadKeys.Button.B).whenPressed(new InstantCommand(() -> scoreSubsystem.setWristPosition(1)));
+        driveGamepad.getGamepadButton(GamepadKeys.Button.B).whenPressed(new MoveWristUpCommand(scoreSubsystem));
+        driveGamepad.getGamepadButton(GamepadKeys.Button.A).whenPressed(new MoveWristDownCommand(scoreSubsystem));
 
     }
 }
