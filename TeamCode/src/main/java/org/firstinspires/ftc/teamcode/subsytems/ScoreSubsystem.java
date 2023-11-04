@@ -13,7 +13,7 @@ public class ScoreSubsystem extends SubsystemBase {
     final double NUBBIN_OPEN_ALL_THE_WAY = 0.45;
 
 
-    boolean isWristUp = true; // Assume the worst!!
+    boolean isWristUp = false; // Assume the worst!!
     Servo wristServo;
     Servo releaseServo;
 
