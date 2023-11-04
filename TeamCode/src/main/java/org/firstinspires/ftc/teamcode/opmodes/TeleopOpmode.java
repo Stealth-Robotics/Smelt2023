@@ -9,6 +9,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.teamcode.commands.DefaultArmCommand;
 import org.firstinspires.ftc.teamcode.commands.DefaultDriveCommand;
 import org.firstinspires.ftc.teamcode.commands.DefaultIntakeCommand;
+import org.firstinspires.ftc.teamcode.commands.InitBotCommand;
 import org.firstinspires.ftc.teamcode.commands.MoveWristDownCommand;
 import org.firstinspires.ftc.teamcode.commands.MoveWristUpCommand;
 import org.firstinspires.ftc.teamcode.subsytems.ArmSubSystem;
@@ -73,5 +74,7 @@ public class TeleopOpmode extends CommandOpMode {
 
         mechanismGamepad.getGamepadButton(GamepadKeys.Button.DPAD_UP).whenPressed(new InstantCommand(() -> launchyGuySubsystem.flyBeFree()));
 
+        // Schedule the command to reset the bot to its initial position.
+        schedule(new InitBotCommand(scoreSubsystem));
     }
 }
