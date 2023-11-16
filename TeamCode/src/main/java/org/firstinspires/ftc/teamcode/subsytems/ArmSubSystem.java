@@ -1,8 +1,7 @@
 package org.firstinspires.ftc.teamcode.subsytems;
 
 import com.arcrobotics.ftclib.command.SubsystemBase;
-import com.arcrobotics.ftclib.hardware.ServoEx;
-import com.qualcomm.hardware.bosch.BNO055IMU;
+import com.arcrobotics.ftclib.controller.PIDFController;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -20,7 +19,11 @@ public class ArmSubSystem extends SubsystemBase {
     final int MIN_TICKS = 0;
     final private DcMotor armShoulderDrive;
 
+    private boolean runPID = false;
+
     Telemetry telemetry;
+
+    PIDFController armController;
 
 
     public ArmSubSystem(HardwareMap hardwareMap, Telemetry telemetry) {
@@ -32,6 +35,18 @@ public class ArmSubSystem extends SubsystemBase {
         armShoulderDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         armShoulderDrive.setDirection(DcMotorSimple.Direction.REVERSE);
 
+        armController = new PIDFController(0.02, 0, 0.0000, 0);
+
+    }
+
+    public void setRunPID(boolean newValue)
+    {
+        runPID = newValue;
+    }
+
+    public boolean getRunPID()
+    {
+        return runPID;
     }
 
     public void setPower(double power, boolean isWristUp) {
@@ -63,8 +78,27 @@ public class ArmSubSystem extends SubsystemBase {
         armShoulderDrive.setPower(power);
     }
 
+    public void setRawPower(double rawPower) {
+        armShoulderDrive.setPower(rawPower);
+    }
+
+    public void setSetPoint(double setPoint) {
+        armController.setSetPoint(setPoint);
+    }
+
+    public int getCurrentPosition() {
+        return armShoulderDrive.getCurrentPosition();
+    }
+
+    public boolean atSetPoint(){return armController.atSetPoint();}
+
     @Override
     public void periodic() {
+        if(runPID)
+        {
+            double calc = armController.calculate(getCurrentPosition());
+            setRawPower(calc);
+        }
     }
 
 } 

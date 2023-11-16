@@ -13,6 +13,9 @@ public class DefaultArmCommand extends CommandBase {
     private final DoubleSupplier joystickSupplier;
 
     private final BooleanSupplier isWristUp;
+
+    private boolean setOnce = true;
+
     public DefaultArmCommand(ArmSubSystem armSubSystem, DoubleSupplier joystickSupplier, BooleanSupplier isWristUp)
     {
         this.armSubSystem = armSubSystem;
@@ -26,7 +29,19 @@ public class DefaultArmCommand extends CommandBase {
 
     @Override
     public void execute() {
-        armSubSystem.setPower(joystickSupplier.getAsDouble(),isWristUp.getAsBoolean());
+
+        double joyStickValue = joystickSupplier.getAsDouble();
+
+        if(Math.abs(joyStickValue) > 0.05)
+        {
+            armSubSystem.setRawPower(joyStickValue);
+            armSubSystem.setRunPID(false);
+            setOnce = false;
+        } else if (!setOnce) {
+            setOnce = true;
+            armSubSystem.setRunPID(true);
+            armSubSystem.setSetPoint(armSubSystem.getCurrentPosition());
+        }
     }
 
     @Override
