@@ -12,8 +12,7 @@ public class MoveWristDownCommand extends SequentialCommandGroup {
 
         addCommands(
                 new InstantCommand(() -> scoreSubsystem.setWristDown()),
-                new WaitCommand(500),
-                new InstantCommand(() -> scoreSubsystem.wristIsReallyDownNow())
+                new WaitCommand(500)
         );
     }
 }

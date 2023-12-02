@@ -60,13 +60,18 @@ public class DriveSubsystem extends SubsystemBase {
         return imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS) - headingOffset;
     }
 
+    public double getHeadingDegrees()
+    {
+        return imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES) - headingOffset;
+    }
+
     public void resetAngle() {
         headingOffset = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
     }
 
     // We'll just use the position of one wheel
     public int getCurrentPosition() {
-        return leftFrontDrive.getCurrentPosition();
+        return rightFrontDrive.getCurrentPosition();
     }
 
     /**
@@ -109,13 +114,24 @@ public class DriveSubsystem extends SubsystemBase {
         rightRearDrive.setPower(backRightPower);
     }
 
-    public void stop() {
-        leftFrontDrive.setPower(0);
-        leftRearDrive.setPower(0);
-        rightFrontDrive.setPower(0);
-        rightRearDrive.setPower(0);
+    public void setPower(double power) {
+        leftFrontDrive.setPower(power);
+        leftRearDrive.setPower(power);
+        rightFrontDrive.setPower(power);
+        rightRearDrive.setPower(power);
     }
 
+    public void setTurnPower(double power) {
+        leftFrontDrive.setPower(power);
+        leftRearDrive.setPower(power);
+        rightFrontDrive.setPower(-power);
+        rightRearDrive.setPower(-power);
+    }
+
+    public void stop()
+    {
+        setPower(0);
+    }
 
     @Override
     public void periodic() {

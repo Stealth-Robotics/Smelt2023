@@ -8,10 +8,14 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.commands.DefaultArmCommand;
 import org.firstinspires.ftc.teamcode.commands.DefaultDriveCommand;
+import org.firstinspires.ftc.teamcode.commands.DefaultExtenderCommand;
 import org.firstinspires.ftc.teamcode.commands.DefaultIntakeCommand;
+import org.firstinspires.ftc.teamcode.commands.HorizontalPreset;
 import org.firstinspires.ftc.teamcode.commands.InitBotCommand;
 import org.firstinspires.ftc.teamcode.commands.MoveWristDownCommand;
 import org.firstinspires.ftc.teamcode.commands.MoveWristUpCommand;
+import org.firstinspires.ftc.teamcode.commands.IntakePreset;
+import org.firstinspires.ftc.teamcode.commands.ScorePreset;
 import org.firstinspires.ftc.teamcode.subsytems.ArmSubSystem;
 import org.firstinspires.ftc.teamcode.subsytems.DriveSubsystem;
 import org.firstinspires.ftc.teamcode.subsytems.ExtenderSubsystem;
@@ -58,23 +62,23 @@ public class TeleopOpmode extends CommandOpMode {
 
         armSubSystem.setDefaultCommand(new DefaultArmCommand(armSubSystem, () -> mechanismGamepad.getLeftY(), () -> scoreSubsystem.isWristUp()));
 
-        intakeSubsystem.setDefaultCommand(new DefaultIntakeCommand(intakeSubsystem, () -> mechanismGamepad.getRightY()));
+        intakeSubsystem.setDefaultCommand(new DefaultIntakeCommand(intakeSubsystem, () -> (
+                mechanismGamepad.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) - mechanismGamepad.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER))));
 
         // Not ready yet!!!
-//        extenderSubsystem.setDefaultCommand(new DefaultExtenderCommand(extenderSubsystem, () -> mechanismGamepad.getRightY()));
+         extenderSubsystem.setDefaultCommand(new DefaultExtenderCommand(extenderSubsystem, () -> mechanismGamepad.getRightY()));
 
         driveGamepad.getGamepadButton(GamepadKeys.Button.LEFT_BUMPER).whenPressed(new InstantCommand(() -> driveSubsystem.resetAngle()));
 
         driveGamepad.getGamepadButton(GamepadKeys.Button.B).whenPressed(new MoveWristUpCommand(scoreSubsystem));
         driveGamepad.getGamepadButton(GamepadKeys.Button.A).whenPressed(new MoveWristDownCommand(scoreSubsystem));
 
-        driveGamepad.getGamepadButton(GamepadKeys.Button.DPAD_LEFT).whenPressed(new InstantCommand(() -> scoreSubsystem.closeNubbin()));
-        driveGamepad.getGamepadButton(GamepadKeys.Button.DPAD_UP).whenPressed(new InstantCommand(() -> scoreSubsystem.openNubbinForOne()));
-        driveGamepad.getGamepadButton(GamepadKeys.Button.DPAD_RIGHT).whenPressed(new InstantCommand(() -> scoreSubsystem.openNubbinAllTheWay()));
-
-        mechanismGamepad.getGamepadButton(GamepadKeys.Button.DPAD_UP).whenPressed(new InstantCommand(() -> launchyGuySubsystem.flyBeFree()));
+        mechanismGamepad.getGamepadButton(GamepadKeys.Button.DPAD_DOWN).whenPressed(new IntakePreset(armSubSystem, extenderSubsystem, scoreSubsystem));
+        mechanismGamepad.getGamepadButton(GamepadKeys.Button.DPAD_LEFT).whenPressed(new ScorePreset(scoreSubsystem, armSubSystem));
+        mechanismGamepad.getGamepadButton(GamepadKeys.Button.DPAD_RIGHT).whenPressed(new HorizontalPreset(scoreSubsystem, armSubSystem));
+        mechanismGamepad.getGamepadButton(GamepadKeys.Button.DPAD_UP).whenPressed(new HorizontalPreset(scoreSubsystem, armSubSystem));
 
         // Schedule the command to reset the bot to its initial position.
-        schedule(new InitBotCommand(scoreSubsystem));
+        schedule(new InitBotCommand(scoreSubsystem, extenderSubsystem, armSubSystem));
     }
 }

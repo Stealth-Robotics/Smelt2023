@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.subsytems;
 
 import com.arcrobotics.ftclib.command.SubsystemBase;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -43,4 +44,14 @@ public class ExtenderSubsystem extends SubsystemBase {
     {
         return limitSwitch.getState() != limitSwitch1.getState();
     }
+
+    @Override
+    public void periodic() {
+
+        telemetry.addData("ExtenderLimitSwitch", limitSwitch.getState());
+        telemetry.addData("ExtenderLimitSwitch1", limitSwitch1.getState());
+        telemetry.update();
+
+    }
+
 }

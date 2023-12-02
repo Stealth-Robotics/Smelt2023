@@ -4,6 +4,7 @@ import com.arcrobotics.ftclib.command.SubsystemBase;
 import com.arcrobotics.ftclib.controller.PIDFController;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -19,11 +20,31 @@ public class ArmSubSystem extends SubsystemBase {
     final int MIN_TICKS = 0;
     final private DcMotor armShoulderDrive;
 
-    private boolean runPID = false;
+    private boolean runPID = true;
 
     Telemetry telemetry;
 
     PIDFController armController;
+
+    private final DigitalChannel limitSwitch;
+    private final DigitalChannel limitSwitch1;
+
+    public enum ArmPosition {
+
+        INTAKE(0),
+        FLAT(1600),
+        UP(4000),
+        SCORE(5500);
+
+        private final int value;
+
+        private ArmPosition(int position){
+            this.value = position;
+        }
+        public int getValue() {
+            return value;
+        }
+        }
 
 
     public ArmSubSystem(HardwareMap hardwareMap, Telemetry telemetry) {
@@ -37,6 +58,9 @@ public class ArmSubSystem extends SubsystemBase {
 
         armController = new PIDFController(0.02, 0, 0.0000, 0);
 
+        limitSwitch = hardwareMap.get(DigitalChannel.class, "ArmLimitSwitch");
+        limitSwitch1 = hardwareMap.get(DigitalChannel.class, "ArmLimitSwitch1");
+
     }
 
     public void setRunPID(boolean newValue)
@@ -48,6 +72,8 @@ public class ArmSubSystem extends SubsystemBase {
     {
         return runPID;
     }
+
+    public boolean getLimitSwitch(){return limitSwitch.getState();}
 
     public void setPower(double power, boolean isWristUp) {
         int p = armShoulderDrive.getCurrentPosition();
@@ -92,6 +118,12 @@ public class ArmSubSystem extends SubsystemBase {
 
     public boolean atSetPoint(){return armController.atSetPoint();}
 
+    public void reset()
+    {
+        armShoulderDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        armShoulderDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+    }
+
     @Override
     public void periodic() {
         if(runPID)
@@ -99,6 +131,11 @@ public class ArmSubSystem extends SubsystemBase {
             double calc = armController.calculate(getCurrentPosition());
             setRawPower(calc);
         }
+
+        telemetry.addData("Arm Encoder", getCurrentPosition());
+        telemetry.addData("ArmLimitSwitch", limitSwitch.getState());
+        telemetry.addData("ArmLimitSwitch1", limitSwitch1.getState());
+        telemetry.update();
     }
 
 } 

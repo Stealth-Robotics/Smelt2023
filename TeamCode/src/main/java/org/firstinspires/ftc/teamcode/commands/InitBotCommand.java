@@ -4,11 +4,13 @@ import com.arcrobotics.ftclib.command.InstantCommand;
 import com.arcrobotics.ftclib.command.SequentialCommandGroup;
 import com.arcrobotics.ftclib.command.WaitCommand;
 
+import org.firstinspires.ftc.teamcode.subsytems.ArmSubSystem;
+import org.firstinspires.ftc.teamcode.subsytems.ExtenderSubsystem;
 import org.firstinspires.ftc.teamcode.subsytems.ScoreSubsystem;
 
 public class InitBotCommand extends SequentialCommandGroup {
-    public InitBotCommand(ScoreSubsystem scoreSubsystem) {
-        addRequirements(scoreSubsystem);
+    public InitBotCommand(ScoreSubsystem scoreSubsystem, ExtenderSubsystem extenderSubsystem, ArmSubSystem armSubSystem) {
+        addRequirements(scoreSubsystem, extenderSubsystem, armSubSystem);
 
         // TODO: right now this only adjusts the wrist.
         //  - later, you want to:
@@ -18,9 +20,12 @@ public class InitBotCommand extends SequentialCommandGroup {
         //    - move the arm down until it contacts the lower limit switch
         //    - move the wrist down
         addCommands(
-                new MoveWristDownCommand(scoreSubsystem),
-                new InstantCommand(() -> scoreSubsystem.openNubbinAllTheWay()),
-                new WaitCommand(1000) // Give the servos a second to settle
+                new MoveWristUpCommand(scoreSubsystem),
+                new InstantCommand(scoreSubsystem::openNubbinAllTheWay),
+                new WaitCommand(1000), // Give the servos a second to settle
+                new ZeroExtenderCommand(extenderSubsystem),
+                new ZeroArmCommand(armSubSystem),
+                new MoveWristDownCommand(scoreSubsystem)
         );
     }
 }
