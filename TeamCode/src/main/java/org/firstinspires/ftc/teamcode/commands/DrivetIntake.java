@@ -2,34 +2,36 @@ package org.firstinspires.ftc.teamcode.commands;
 
 import com.arcrobotics.ftclib.command.CommandBase;
 
-import org.firstinspires.ftc.teamcode.subsytems.ArmSubSystem;
 import org.firstinspires.ftc.teamcode.subsytems.IntakeSubsystem;
 
-import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 
-public class DefaultIntakeCommand extends CommandBase {
+public class DrivetIntake extends CommandBase {
 
     private final IntakeSubsystem intakeSubsystem;
-    private final DoubleSupplier joystickSupplier;
-
-    public DefaultIntakeCommand(IntakeSubsystem intakeSubsystem, DoubleSupplier joystickSupplier)
+    private double power;
+    private int count = 0;
+    public DrivetIntake(IntakeSubsystem intakeSubsystem, double power)
     {
         this.intakeSubsystem = intakeSubsystem;
-
-        this.joystickSupplier = joystickSupplier;
-
-
+        this.power = power;
         addRequirements(intakeSubsystem);
     }
 
     @Override
     public void execute() {
-        intakeSubsystem.setPower(joystickSupplier.getAsDouble());
+        count++;
+        intakeSubsystem.setPower(this.power);
     }
 
     @Override
     public boolean isFinished() {
+        if(count > 50)
+        {
+            intakeSubsystem.setPower(0);
+            return true;
+        }
+
         return false;
     }
 }

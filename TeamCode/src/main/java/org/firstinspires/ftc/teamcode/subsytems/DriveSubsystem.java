@@ -43,6 +43,17 @@ public class DriveSubsystem extends SubsystemBase {
         rightFrontDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rightRearDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
+
+        rightFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightFrontDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        rightRearDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightRearDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        leftRearDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        leftRearDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        leftFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        leftFrontDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+
         imu = hardwareMap.get(IMU.class, "imu");
         IMU.Parameters parameters = new IMU.Parameters(
                 new RevHubOrientationOnRobot(
@@ -62,6 +73,8 @@ public class DriveSubsystem extends SubsystemBase {
 
     public double getHeadingDegrees()
     {
+        telemetry.addData("heading", (imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES) - headingOffset));
+
         return imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES) - headingOffset;
     }
 
@@ -71,6 +84,7 @@ public class DriveSubsystem extends SubsystemBase {
 
     // We'll just use the position of one wheel
     public int getCurrentPosition() {
+        telemetry.addData("right front", rightFrontDrive.getCurrentPosition());
         return rightFrontDrive.getCurrentPosition();
     }
 

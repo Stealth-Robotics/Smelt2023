@@ -135,7 +135,7 @@ public class ArmSubSystem extends SubsystemBase {
         telemetry.addData("Arm Encoder", getCurrentPosition());
         telemetry.addData("ArmLimitSwitch", limitSwitch.getState());
         telemetry.addData("ArmLimitSwitch1", limitSwitch1.getState());
-        telemetry.update();
+//        telemetry.update();
     }
 
 } 

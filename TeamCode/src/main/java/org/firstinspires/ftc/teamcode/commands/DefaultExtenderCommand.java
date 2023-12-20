@@ -24,7 +24,7 @@ public class DefaultExtenderCommand  extends CommandBase {
 
     @Override
     public void execute() {
-        extenderSubsystem.setPosition(extenderSubsystem.getPosition() + (joystickSupplier.getAsDouble()* 0.001));
+        extenderSubsystem.setPosition(extenderSubsystem.getPosition() + (joystickSupplier.getAsDouble()* 0.005));
 
     }
 

@@ -3,9 +3,11 @@ package org.firstinspires.ftc.teamcode.opmodes;
 import com.arcrobotics.ftclib.command.Command;
 import com.arcrobotics.ftclib.command.CommandScheduler;
 import com.arcrobotics.ftclib.command.Subsystem;
+import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
+import org.firstinspires.ftc.teamcode.commands.DefaultIntakeCommand;
 import org.firstinspires.ftc.teamcode.commands.autos.BlueCloseAutoCommand;
 import org.firstinspires.ftc.teamcode.subsytems.ArmSubSystem;
 import org.firstinspires.ftc.teamcode.subsytems.DriveSubsystem;
@@ -40,9 +42,10 @@ public class BlueCloseAuto extends LinearOpMode {
                 scoreSubsystem
         );
 
-        while (!isStarted()){
+        while (!isStarted()){ }
 
-        }
+        //intakeSubsystem.setPower(-1);
+
 
         schedule(new BlueCloseAutoCommand(
                 driveSubsystem,

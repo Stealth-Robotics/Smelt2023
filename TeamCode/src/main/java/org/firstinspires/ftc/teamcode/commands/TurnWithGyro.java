@@ -11,26 +11,29 @@ public class TurnWithGyro extends CommandBase {
 
     final double angle;
 
-    final PIDFController turnController;
 
     public TurnWithGyro(DriveSubsystem driveSubsystem, double angle)
     {
         this.driveSubsystem = driveSubsystem;
         this.angle = angle;
 
-        turnController = new PIDFController(0, 0, 0,0);
-
         addRequirements(driveSubsystem);
     }
 
     @Override
     public void initialize() {
-        turnController.setSetPoint(driveSubsystem.getHeadingDegrees() + angle);
     }
 
     @Override
     public void execute() {
-        driveSubsystem.setTurnPower(turnController.calculate(driveSubsystem.getHeadingDegrees()));
+        if(angle > driveSubsystem.getHeadingDegrees())
+        {
+            driveSubsystem.setTurnPower(.3);
+        }
+        else
+        {
+            driveSubsystem.setTurnPower(-.3);
+        }
     }
 
     @Override
@@ -40,6 +43,11 @@ public class TurnWithGyro extends CommandBase {
 
     @Override
     public boolean isFinished() {
-        return turnController.atSetPoint();
+        if (Math.abs(angle - driveSubsystem.getHeadingDegrees()) < 2)
+        {
+            driveSubsystem.stop();
+            return true;
+        }
+        return false;
     }
 }

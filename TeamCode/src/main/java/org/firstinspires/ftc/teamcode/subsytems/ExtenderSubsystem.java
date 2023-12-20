@@ -50,7 +50,7 @@ public class ExtenderSubsystem extends SubsystemBase {
 
         telemetry.addData("ExtenderLimitSwitch", limitSwitch.getState());
         telemetry.addData("ExtenderLimitSwitch1", limitSwitch1.getState());
-        telemetry.update();
+      //  telemetry.update();
 
     }
 

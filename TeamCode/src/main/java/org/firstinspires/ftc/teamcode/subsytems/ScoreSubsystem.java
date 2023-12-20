@@ -8,7 +8,7 @@ public class ScoreSubsystem extends SubsystemBase {
     final double UP_POSITION = 0.6;
     final double DOWN_POSITION = 0.91;
 
-    final double NUBBIN_CLOSED = 0.27;
+    final double NUBBIN_CLOSED = 0.18;
     final double NUBBIN_OPEN_FOR_ONE = 0.39;
     final double NUBBIN_OPEN_ALL_THE_WAY = 0.45;
 

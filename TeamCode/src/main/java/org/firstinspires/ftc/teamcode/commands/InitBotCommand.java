@@ -6,6 +6,7 @@ import com.arcrobotics.ftclib.command.WaitCommand;
 
 import org.firstinspires.ftc.teamcode.subsytems.ArmSubSystem;
 import org.firstinspires.ftc.teamcode.subsytems.ExtenderSubsystem;
+import org.firstinspires.ftc.teamcode.subsytems.LauchyGuySubsystem;
 import org.firstinspires.ftc.teamcode.subsytems.ScoreSubsystem;
 
 public class InitBotCommand extends SequentialCommandGroup {
@@ -26,6 +27,8 @@ public class InitBotCommand extends SequentialCommandGroup {
                 new ZeroExtenderCommand(extenderSubsystem),
                 new ZeroArmCommand(armSubSystem),
                 new MoveWristDownCommand(scoreSubsystem)
+
+
         );
     }
 }
